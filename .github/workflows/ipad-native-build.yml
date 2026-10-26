@@ -1,0 +1,35 @@
+
+name: PDFCraft Native iPad Build
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-ipad:
+    runs-on: macos-15
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Show Xcode version
+        run: xcodebuild -version
+
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      - name: Generate Xcode project
+        working-directory: apps/pdfcraft-ipad
+        run: xcodegen generate
+
+      - name: Build native iPad app
+        working-directory: apps/pdfcraft-ipad
+        run: |
+          xcodebuild \
+            -project PDFCraftiPad.xcodeproj \
+            -scheme PDFCraftiPad \
+            -configuration Debug \
+            -sdk iphonesimulator \
+            -destination 'generic/platform=iOS Simulator' \
+            CODE_SIGNING_ALLOWED=NO \
+            build
