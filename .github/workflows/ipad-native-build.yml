@@ -33,3 +33,31 @@ jobs:
             -destination 'generic/platform=iOS Simulator' \
             CODE_SIGNING_ALLOWED=NO \
             build
+
+
+      - name: Build for physical iPad
+        working-directory: apps/pdfcraft-ipad
+        run: |
+          xcodebuild \
+            -project PDFCraftiPad.xcodeproj \
+            -scheme PDFCraftiPad \
+            -configuration Debug \
+            -sdk iphoneos \
+            -destination 'generic/platform=iOS' \
+            -derivedDataPath build-device \
+            CODE_SIGNING_ALLOWED=NO \
+            build
+
+      - name: Package unsigned IPA
+        working-directory: apps/pdfcraft-ipad
+        run: |
+          mkdir -p Payload
+          cp -R build-device/Build/Products/Debug-iphoneos/PDFCraftiPad.app Payload/
+          zip -qr PDFCraftiPad-unsigned.ipa Payload
+
+      - name: Upload iPad IPA
+        uses: actions/upload-artifact@v4
+        with:
+          name: PDFCraft-iPad-Unsigned
+          path: apps/pdfcraft-ipad/PDFCraftiPad-unsigned.ipa
+          if-no-files-found: error
