@@ -35,6 +35,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: pdfcraft-ipad-web
-          path: dist/pdfcraft-web-*.zip
+          path: dist/release/pdfcraft-web-*.zip
           if-no-files-found: error
           retention-days: 14
